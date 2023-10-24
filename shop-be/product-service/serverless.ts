@@ -5,7 +5,7 @@ import * as functions from '@functions/index'
 const serverlessConfiguration: AWS = {
   service: 'shop-info-service',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs18.x',
