@@ -1,7 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 
-import getShopAdminInfo from '@functions/getShopAdminInfo';
-import getShopInfo from '@functions/getShopInfo';
+import * as functions from '@functions/index'
 
 const serverlessConfiguration: AWS = {
   service: 'shop-info-service',
@@ -21,7 +20,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { getShopAdminInfo, getShopInfo },
+  functions: { ...functions },
   package: { individually: true },
   custom: {
     esbuild: {

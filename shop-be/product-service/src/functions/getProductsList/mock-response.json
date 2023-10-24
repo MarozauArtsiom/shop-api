@@ -1,0 +1,43 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": [
+    {
+      "description": "A real-time strategy game set in a fantasy world filled with orcs, humans, and other races.",
+      "id": "1",
+      "price": 30,
+      "title": "Warcraft III"
+    },
+    {
+      "description": "An action-adventure game where players control the main character, Dante, in his quest to defeat demons.",
+      "id": "2",
+      "price": 20,
+      "title": "Devil May Cry"
+    },
+    {
+      "description": "A sandbox game where players can build and explore their own worlds.",
+      "id": "3",
+      "price": 25,
+      "title": "Minecraft"
+    },
+    {
+      "description": "A first-person shooter game set in a dystopian future.",
+      "id": "4",
+      "price": 40,
+      "title": "Cyberpunk 2077"
+    },
+    {
+      "description": "An action-packed game set in an open world environment.",
+      "id": "5",
+      "price": 60,
+      "title": "Grand Theft Auto V"
+    },
+    {
+      "description": "An action RPG that combines open world exploration with strategic combat against robotic creatures and other factions in a post-apocalyptic world.",
+      "id": "6",
+      "price": 50,
+      "title": "Horizon Zero Dawn"
+    }
+  ]
+}
