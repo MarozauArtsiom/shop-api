@@ -5,7 +5,7 @@ export default {
   events: [
     {
       http: {
-        path: 'products',
+        path: 'product',
         method: 'GET',
       },
     },
