@@ -7,6 +7,6 @@ export const main: ValidatedEventAPIGatewayProxyEvent<void> = async () => {
   const data = await getProductsList() as APIGatewayProxyResult
   console.log(data)
   return formatJSONResponse(
-    Object.values(JSON.parse(data.body)).map(x => ({...x, count: Math.trunc(Math.random() * 100)}))
+    JSON.parse(data.body).map(x => ({...x, count: Math.trunc(Math.random() * 100)}))
   );
 };
