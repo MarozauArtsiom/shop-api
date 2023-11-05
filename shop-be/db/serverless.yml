@@ -44,7 +44,4 @@ resources:
     RouteTableAssociationSubnetB: ${file(./resource/RouteTableAssociationSubnetB.yml)}
     RouteTableAssociationSubnetC: ${file(./resource/RouteTableAssociationSubnetC.yml)}
 
-    AuroraRDSClusterParameter: ${file(./resource/AuroraRDSClusterParameter.yml)}
-    AuroraRDSInstanceParameter: ${file(./resource/AuroraRDSInstanceParameter.yml)}
-    AuroraRDSCluster: ${file(./resource/AuroraRDSCluster.yml)}
-    AuroraRDSInstance: ${file(./resource/AuroraRDSInstance.yml)}
+    PostgreSqlRDSInstance: ${file(./resource/PostgreSqlRDSInstance.yml)}
