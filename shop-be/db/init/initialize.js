@@ -1,62 +1,41 @@
-const AWS = require("aws-sdk");
-const tables = require("./tables");
+const createSequelize = require("./createSequelize");
+const createTables = require("./tables/createTables");
+const createFakeData = require("./tables/createFakeData");
 
-const databaseUrl = process.env.DATABASE_URL || "http://localhost:8000";
-const region = process.env.region || "local";
-const isFake = !!process.env.NEED_FAKE_DATA;
+const isProduction = process.env.NODE_ENV === "production";
+const databaseUrl = process.env.DATABASE_URL;
+const fakeData = process.env.FAKE_DATA;
 
-// Configure the AWS SDK to connect to the local DynamoDB instance
-AWS.config.update({
-  region: region,
-  endpoint: databaseUrl,
-});
+async function init() {
+  console.log("Initializing database...");
+  const sequelize = createSequelize(isProduction ? databaseUrl : null);
 
-// Create a new DynamoDB service object
-const dynamodb = new AWS.DynamoDB();
+  console.log("Creating tables...");
+  const tables = createTables(sequelize);
 
-const tableActions = Object.keys(tables).map(async (tableKey) => {
-  const table = tables[tableKey];
   try {
-    await table.createTable(dynamodb, isFake);
+    await sequelize.sync({ force: true });
+    console.log("Database and tables created!");
   } catch (error) {
-    console.log(
-      `[Create Table: "${table.tableName}"] Error in "${region}" region`
-    );
-    console.log(`at host: ${databaseUrl}`);
-    console.log(`at: ${new Date()}`);
-    console.log(error);
-
-    // throw error to stop the process
-    throw error;
+    console.log("!!!!!!!!!");
+    console.log("Failed to create database and tables:", error);
+    console.log("!!!!!!!!!");
+    return;
   }
-  try {
-    await table.fakeData(dynamodb);
-  } catch (error) {
-    console.log(
-      `[Error fake data: "${table.tableName}"] Error in "${region}" region`
-    );
-    console.log(`at host: ${databaseUrl}`);
-    console.log(`at: ${new Date()}`);
-    console.log(error);
 
-    // throw error to stop the process
-    throw error;
+  if (fakeData) {
+    console.log("Faking data...");
+    try {
+      const result = await createFakeData(tables);
+      console.log(`Fake is created: ${JSON.stringify(result, null, 2)}`)
+      console.log("Faking is Done!");
+    } catch (error) {
+      console.log("!!!!!!!!!");
+      console.log("Failed to fake data:", error);
+      console.log("!!!!!!!!!");
+      return;
+    }
   }
-});
+}
 
-Promise.all(tableActions)
-  .then(() => {
-    console.log("!!!!!!!!!!!!!!!!!!!!");
-    console.log(`All tables created in ${region} region`);
-    console.log(`at host: ${databaseUrl}`);
-    console.log(`at: ${new Date()}`);
-    console.log("!!!!!!!!!!!!!!!!!!!!");
-  })
-  .catch((error) => {
-    console.log("!!!!!!!!!!!!!!!!!!!!");
-    console.log(`Error while create Tables in ${region} region`);
-    console.log(`at host: ${databaseUrl}`);
-    console.log(`at: ${new Date()}`);
-    console.log(error);
-    console.log("!!!!!!!!!!!!!!!!!!!!");
-  });
+init();
