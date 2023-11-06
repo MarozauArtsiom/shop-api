@@ -8,7 +8,14 @@ const { Sequelize } = require('sequelize');
       sequelize = new Sequelize(databaseUrl, {
         dialect: 'postgres',
         logging: false,
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false // You should have the CA certificate ideally to avoid setting this to false
+          }
+        },
       });
+      console.log('Using Prod DB', databaseUrl)
     } else {
       // Use SQLite for development
       console.log(`storage: ${process.env.HOME}/database.sqlite`)

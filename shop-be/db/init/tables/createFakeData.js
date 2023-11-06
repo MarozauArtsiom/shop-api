@@ -1,11 +1,11 @@
 const fakeProducts = require("./fake/products");
 const fakeStocks = require("./fake/stocks");
 
-const createFakeData = async (tables) => {
+const createFakeData = async (tables, transaction) => {
   const { Product, Stock } = tables;
 
-  const products = await Product.bulkCreate(fakeProducts);
-  const stocks = await Stock.bulkCreate(fakeStocks);
+  const products = await Product.bulkCreate(fakeProducts, { transaction });
+  const stocks = await Stock.bulkCreate(fakeStocks, { transaction });
 
   return { products, stocks };
 };
