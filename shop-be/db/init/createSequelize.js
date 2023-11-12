@@ -6,7 +6,7 @@ function createSequelize(databaseUrl, isProduction) {
   console.log("Creating Sequelize...");
   !isProduction && console.log(`connection string: ${databaseUrl}`);
 
-  const prodOption = isProd
+  const prodOption = isProduction
     ? {
         dialectOptions: {
           ssl: {
