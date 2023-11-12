@@ -6,16 +6,13 @@ const createFakeData = require("./tables/createFakeData");
 async function init() {
   const fakeData = process.env.FAKE_DATA;
   const isProd = process.env.NODE_ENV === "prod";
-
-  const dbName = process.env.POSTGRES_DB;
-  const dbUser = process.env.POSTGRES_USER;
-  const dbPassword = process.env.POSTGRES_PASSWORD;
+  const databaseUrl = process.env.CONNECTION_STRING;
 
   console.log("Initializing database...");
   console.log(`NODE_ENV:${process.env.NODE_ENV}`);
 
   try {
-    const sequelize = await createSequelize(dbName, dbUser, dbPassword, isProd);
+    const sequelize = await createSequelize(databaseUrl, isProd);
 
     console.log('start to Creating tables...')
 

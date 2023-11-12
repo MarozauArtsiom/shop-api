@@ -1,16 +1,26 @@
 const { Sequelize } = require("sequelize");
 
-function createSequelize(dbName, user, password, isProduction) {
+function createSequelize(databaseUrl, isProduction) {
   let sequelize;
 
-  console.log('Creating Sequelize...')
-  console.log(`dbName: ${dbName}`)
-  console.log(`user: ${user}`)
-  !isProduction && console.log(`password: ${password}`)
+  console.log("Creating Sequelize...");
+  !isProduction && console.log(`connection string: ${databaseUrl}`);
 
-  sequelize = new Sequelize(dbName, user, password, {
+  const prodOption = isProd
+    ? {
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
+      }
+    : {};
+
+  sequelize = new Sequelize(databaseUrl, {
     dialect: "postgres",
     logging: false,
+    ...prodOption,
   });
 
   console.log("Sequelize is created!");

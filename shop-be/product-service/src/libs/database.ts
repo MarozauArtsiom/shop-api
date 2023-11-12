@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 require('dotenv').config();
 
 const databaseUrl = process.env.CONNECTION_STRING;
+const isProd = process.env.NODE_ENV === "prod";
 
 class Database {
   private static instance: Sequelize;
@@ -11,7 +12,17 @@ class Database {
   public static async getInstance(): Promise<Sequelize> {
     if (!Database.instance) {
       try {
-        Database.instance = new Sequelize(databaseUrl, { dialect: "postgres" });
+        const prodOption = isProd
+        ? {
+            dialectOptions: {
+              ssl: {
+                require: true,
+                rejectUnauthorized: false,
+              },
+            },
+          }
+        : {};
+        Database.instance = new Sequelize(databaseUrl, { dialect: "postgres", ...prodOption });
         await Database.instance.authenticate();
         console.log('Connection has been established successfully.');
       } catch (error) {
