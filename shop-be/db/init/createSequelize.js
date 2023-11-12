@@ -1,32 +1,21 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
- function createSequelize (databaseUrl) {
-    let sequelize;
+function createSequelize(dbName, user, password, isProduction) {
+  let sequelize;
 
-    if (databaseUrl) {
-      // Use AWS RDS for production
-      sequelize = new Sequelize(databaseUrl, {
-        dialect: 'postgres',
-        logging: false,
-        dialectOptions: {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false // You should have the CA certificate ideally to avoid setting this to false
-          }
-        },
-      });
-      console.log('Using Prod DB', databaseUrl)
-    } else {
-      // Use SQLite for development
-      console.log(`storage: ${process.env.HOME}/database.sqlite`)
-      sequelize = new Sequelize({
-        dialect: 'sqlite',
-        storage: `${process.env.HOME}/database.sqlite`,
-        logging: false,
-      });
-    }
+  console.log('Creating Sequelize...')
+  console.log(`dbName: ${dbName}`)
+  console.log(`user: ${user}`)
+  !isProduction && console.log(`password: ${password}`)
 
-    return sequelize;
+  sequelize = new Sequelize(dbName, user, password, {
+    dialect: "postgres",
+    logging: false,
+  });
+
+  console.log("Sequelize is created!");
+
+  return sequelize.sync();
 }
 
 module.exports = createSequelize;

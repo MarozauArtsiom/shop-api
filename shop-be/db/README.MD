@@ -17,3 +17,7 @@ create your own `secrets.json`, there is a following structure
     "DBName": "shop_db"
 }
 ```
+
+
+sudo mkdir /var/postgres_data
+sudo chown 999:999 /var/postgres_data

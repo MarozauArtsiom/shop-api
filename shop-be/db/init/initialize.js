@@ -4,46 +4,56 @@ const createTables = require("./tables/createTables");
 const createFakeData = require("./tables/createFakeData");
 
 async function init() {
-  const isProduction = process.env.NODE_ENV === "production";
   const databaseUrl = process.env.DATABASE_URL;
   const fakeData = process.env.FAKE_DATA;
+  const isProd = process.env.NODE_ENV === "production";
+
+  const dbName = process.env.POSTGRES_DB;
+  const dbUser = process.env.POSTGRES_USER;
+  const dbPassword = process.env.POSTGRES_PASSWORD;
 
   console.log("Initializing database...");
-  console.log(
-    `NODE_ENV:${process.env.NODE_ENV}`,
-    `isProd: ${isProduction}`,
-    `databaseUrl: ${databaseUrl}`
-  );
-  const sequelize = createSequelize(isProduction ? databaseUrl : null);
+  console.log(`NODE_ENV:${process.env.NODE_ENV}`);
 
-  const t = await sequelize.transaction(async (transaction) => {
-    console.log("Creating tables...");
-    const tables = createTables(sequelize, transaction);
+  try {
+    const sequelize = await createSequelize(dbName, dbUser, dbPassword, isProd);
 
-    try {
-      await sequelize.sync({ force: true });
-      console.log("Database and tables created!");
-    } catch (error) {
-      console.log("!!!!!!!!!");
-      console.log("Failed to create database and tables:", error);
-      console.log("!!!!!!!!!");
-      throw error;
-    }
+    console.log('start to Creating tables...')
 
-    if (fakeData) {
-      console.log("Faking data...");
+    const t = await sequelize.transaction(async (transaction) => {
+      console.log("Creating tables...");
+      const tables = createTables(sequelize, transaction);
+
       try {
-        const result = await createFakeData(tables, transaction);
-        console.log(`Fake is created: ${JSON.stringify(result, null, 2)}`);
-        console.log("Faking is Done!");
+        await sequelize.sync({ force: true });
+        console.log("Database and tables created!");
       } catch (error) {
         console.log("!!!!!!!!!");
-        console.log("Failed to fake data:", error);
+        console.log("Failed to create database and tables:", error);
         console.log("!!!!!!!!!");
         throw error;
       }
-    }
-  });
+
+      if (fakeData) {
+        console.log("Faking data...");
+        try {
+          const result = await createFakeData(tables, transaction);
+          console.log(`Fake is created: ${JSON.stringify(result, null, 2)}`);
+          console.log("Faking is Done!");
+        } catch (error) {
+          console.log("!!!!!!!!!");
+          console.log("Failed to fake data:", error);
+          console.log("!!!!!!!!!");
+          throw error;
+        }
+      }
+    });
+  } catch (error) {
+    console.log("!!!!!!!!!");
+    console.log("Failed to initialize database:", error);
+    console.log("!!!!!!!!!");
+    throw error;
+  }
 }
 
 init();

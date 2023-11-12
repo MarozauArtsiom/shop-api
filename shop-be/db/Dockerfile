@@ -1,0 +1,7 @@
+FROM postgres:13.3-alpine
+
+ENV POSTGRES_DB=shop_db
+ENV POSTGRES_USER=master
+ENV POSTGRES_PASSWORD=masterpassword
+
+EXPOSE 5432
