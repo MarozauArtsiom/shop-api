@@ -2,7 +2,7 @@ const products = require("./products");
 
 const fakeStocks = products.map((product) => {
   return {
-    productId: product.id,
+    product_id: product.id,
     count: Math.trunc(Math.random() * 100),
   };
 });

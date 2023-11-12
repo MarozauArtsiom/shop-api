@@ -1,5 +1,5 @@
+require('dotenv').config();
 import type { AWS } from '@serverless/typescript';
-
 import * as functions from '@functions/index'
 
 const serverlessConfiguration: AWS = {

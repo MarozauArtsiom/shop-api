@@ -18,12 +18,10 @@ const getDatabase = async () => {
   console.log("Defining associations...");
   Product.hasOne(Stock, {
     foreignKey: "product_id",
-    as: "stock",
   });
 
   Stock.belongsTo(Product, {
     foreignKey: "product_id",
-    as: "product",
   });
 
   console.log("Synchronizing models with database...");

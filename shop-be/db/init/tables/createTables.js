@@ -20,7 +20,7 @@ function createTables(sequelize, transaction) {
         type: DataTypes.INTEGER,
       },
     },
-    { transaction }
+    { transaction, tableName: "Products" }
   );
 
   const Stock = sequelize.define(
@@ -37,7 +37,7 @@ function createTables(sequelize, transaction) {
         type: DataTypes.INTEGER,
       },
     },
-    { transaction }
+    { transaction, tableName: "Stocks" }
   );
 
   Product.hasOne(

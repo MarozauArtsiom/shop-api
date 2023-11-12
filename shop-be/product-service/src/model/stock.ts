@@ -5,7 +5,7 @@ const getStock = async () => {
   try {
     const sequelize = await database.getInstance();
 
-    const Stock = sequelize.define('Stock', {
+    const Stock = sequelize.define('Stocks', {
       product_id: {
         type: DataTypes.UUID,
       },
@@ -14,7 +14,7 @@ const getStock = async () => {
         allowNull: true,
       },
     }, {
-      tableName: "stocks",
+      tableName: "Stocks",
     });
 
     return Stock;

@@ -8,7 +8,6 @@ const getStockItems = async () => {
     const stockItems = await Stock.findAll({
       include: [{
         model: Product,
-        as: 'product',  // Ensure this alias matches the one in your association
       }],
     });
 
@@ -19,7 +18,7 @@ const getStockItems = async () => {
     }));
   } catch (error) {
     console.error('Error fetching stock items:', error);
-    throw error;  // Or handle the error as per your application's error handling strategy
+    throw error;
   }
 };
 
