@@ -16,7 +16,6 @@ const getStockItems = async () => {
     console.log('Start mapping stock items')
     const result = stockItems.map(item => ({
       productId: item.product_id,
-      productTitle: item.product?.title,
       count: item.count,
     }));
     console.log('End mapping stock items', result)
