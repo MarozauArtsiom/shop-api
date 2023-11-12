@@ -6,17 +6,20 @@ const getStockItems = async () => {
   try {
     console.log('Fetching stock items')
     const { Stock, Product } = await getDatabase()
-    const stockItems = await Stock.findAll({
+    const stockItems = await Product.findAll({
       include: [{
-        model: Product,
+        model: Stock,
       }],
     });
     console.log('Fetched stock items', stockItems)
 
     console.log('Start mapping stock items')
     const result = stockItems.map(item => ({
-      productId: item.product_id,
-      count: item.count,
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      count: item.Stock?.count,
     }));
     console.log('End mapping stock items', result)
     return result;
