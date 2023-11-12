@@ -4,9 +4,8 @@ const createTables = require("./tables/createTables");
 const createFakeData = require("./tables/createFakeData");
 
 async function init() {
-  const databaseUrl = process.env.DATABASE_URL;
   const fakeData = process.env.FAKE_DATA;
-  const isProd = process.env.NODE_ENV === "production";
+  const isProd = process.env.NODE_ENV === "prod";
 
   const dbName = process.env.POSTGRES_DB;
   const dbUser = process.env.POSTGRES_USER;
