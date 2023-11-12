@@ -1,12 +1,33 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
-import { formatJSONResponse } from '@libs/api-gateway';
-import { main as getProductsList } from '../getProductsList/handler'
-import { APIGatewayProxyResult } from 'aws-lambda';
+import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import { formatJSONResponse } from "@libs/api-gateway";
+import { Stock, Product } from "@model/database";
 
 export const main: ValidatedEventAPIGatewayProxyEvent<void> = async () => {
-  const data = await getProductsList() as APIGatewayProxyResult
-  console.log(data)
+  let stockList;
+  try {
+    stockList = await Stock.findAll({
+      include: [
+        {
+          model: Product,
+          as: "product",
+          required: true,
+        },
+      ],
+    });
+  } catch (error) {
+    console.log("Error while getting the stock list", error);
+    return formatJSONResponse(
+      { message: "Internal server error" },
+      { statusCode: 500 }
+    );
+  }
   return formatJSONResponse(
-    JSON.parse(data.body).map(x => ({...x, count: Math.trunc(Math.random() * 100)}))
+    stockList.map((x) => ({
+      id: x.product.id,
+      title: x.product.title,
+      description: x.product.description,
+      price: x.product.price,
+      count: x.count,
+    }))
   );
 };
