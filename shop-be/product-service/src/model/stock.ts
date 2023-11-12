@@ -1,32 +1,26 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '@libs/sequelize'; // assuming you export the sequelize instance from this file
-import Product from './product'; // import the associated model
+import { DataTypes } from "sequelize";
+import database from "@libs/database";
 
-interface StockAttributes {
-  product_id: string;
-  count?: number;
+const getStock = async () => {
+  try {
+    const sequelize = await database.getInstance();
+
+    const Stock = sequelize.define('Stock', {
+      product_id: {
+        type: DataTypes.UUID,
+      },
+      count: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+    }, {
+      tableName: "stocks",
+    });
+
+    return Stock;
+  } catch (error) {
+    console.error('Error initializing Stock model:', error);
+  }
 }
 
-export class Stock extends Model<StockAttributes> implements StockAttributes {
-  public product_id!: string;
-  public count!: number;
-}
-
-Stock.init({
-  product_id: {
-    type: DataTypes.UUID,
-    references: {
-      model: Product,
-      key: 'id',
-    },
-  },
-  count: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-}, {
-  sequelize,
-  tableName: 'stocks',
-});
-
-export default Stock;
+export { getStock };

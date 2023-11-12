@@ -1,33 +1,36 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
-import { Stock, Product } from "@model/database";
+import getDatabase from "@model/database";
+
+const getStockItems = async () => {
+  try {
+    const { Stock, Product } = await getDatabase()
+    const stockItems = await Stock.findAll({
+      include: [{
+        model: Product,
+        as: 'product',  // Ensure this alias matches the one in your association
+      }],
+    });
+
+    return stockItems.map(item => ({
+      productId: item.product_id,
+      productTitle: item.product?.title,
+      count: item.count,
+    }));
+  } catch (error) {
+    console.error('Error fetching stock items:', error);
+    throw error;  // Or handle the error as per your application's error handling strategy
+  }
+};
 
 export const main: ValidatedEventAPIGatewayProxyEvent<void> = async () => {
-  let stockList;
   try {
-    stockList = await Stock.findAll({
-      include: [
-        {
-          model: Product,
-          as: "product",
-          required: true,
-        },
-      ],
-    });
+    return formatJSONResponse(await getStockItems());
   } catch (error) {
     console.log("Error while getting the stock list", error);
     return formatJSONResponse(
-      { message: "Internal server error" },
+      { message: `Internal server error` },
       { statusCode: 500 }
     );
   }
-  return formatJSONResponse(
-    stockList.map((x) => ({
-      id: x.product.id,
-      title: x.product.title,
-      description: x.product.description,
-      price: x.product.price,
-      count: x.count,
-    }))
-  );
 };
