@@ -1,0 +1,14 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "description": "## Prerequisites",
+  "main": "serverless.yml",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove",
+    "db:run": "docker-compose up -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
