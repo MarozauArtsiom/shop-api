@@ -24,13 +24,18 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: { ...functions },
 
-  package: { individually: false },
+  package: { excludeDevDependencies: true, individually: false },
   custom: {
     esbuild: {
       bundle: true,
       minify: false,
       sourcemap: true,
       exclude: ['aws-sdk'],
+      external: [
+        'pg',
+        'pg-hstore',
+      ],
+      packager: 'npm',
       target: 'node18',
       define: { 'require.resolve': undefined },
       platform: 'node',
